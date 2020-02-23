@@ -2,62 +2,55 @@
 * File Name: hello.cpp
 * Purpose:
 * Creation Date: 13-02-2020
-* Last Modified: Sun 23 Feb 2020 01:24:08 AM MSK
+* Last Modified: Sun 23 Feb 2020 05:56:16 PM MSK
 * Created by: dima
 -----------------------------------------------------------------------------*/
 
+#include <thread>
+#include <chrono>
 #include <ncurses.h>
-#include <string>
+#include "player.h"
 
 using namespace std;
+
+static bool finished = false;
+
+void *moving_thread(void *value) {
+
+    Player *p = (Player *) value;
+
+    while (!finished) {
+        this_thread::sleep_for(chrono::milliseconds(50));
+        p->move();
+    }
+
+    return NULL;
+}
 
 int main () {
 
     initscr();
     cbreak();
     noecho();
+    curs_set(0);
 
     int y_max, x_max;
     getmaxyx(stdscr, y_max, x_max);
 
-    WINDOW *menu_win = newwin(6, x_max - 12, y_max - 8, 5);
-    box(menu_win, 0, 0);
+    WINDOW *playwin = newwin(y_max, x_max, 0, 0);
+    box(playwin, 0, 0);
     refresh();
-    wrefresh(menu_win);
-    keypad(menu_win, true);
+    wrefresh(playwin);
 
-    string choices[3] = {"Walk", "Jog", "Run"};
-    int choice;
-    int highlight = 0;
+    Player *p = new Player(playwin, 1, 1, '*', '.');
+    p->display();
+    wrefresh(playwin);
 
-    while (1) {
-        for (int i = 0; i < 3; i++) {
-            if (i == highlight)
-                wattron(menu_win, A_REVERSE);
-            mvwprintw (menu_win, i + 1, 1, choices[i].c_str());
-            wattroff(menu_win, A_REVERSE);
-        }
-        choice = wgetch (menu_win);
+    thread worker(moving_thread, p);
+    while (p->getmv() != 'x');
+    finished = true;
+    worker.join();
 
-        switch (choice) {
-            case KEY_UP:
-                highlight--;
-                break;
-            case KEY_DOWN:
-                highlight++;
-                break;
-            default:
-                break;
-        }
-
-        if (choice == 10) {
-            break;
-        }
-    }
-
-    printw ("Your choice was: %s", choices[highlight].c_str());
-
-    getch();
     endwin();
 
     return 0;
