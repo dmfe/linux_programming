@@ -2,18 +2,15 @@
 * File Name: temp_file.cpp
 * Purpose:
 * Creation Date: 13-02-2020
-* Last Modified: Tue 02 Jun 2020 04:07:54 AM MSK
+* Last Modified: Wed 03 Jun 2020 01:42:58 AM MSK
 * Created by: dima
 -----------------------------------------------------------------------------*/
 
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <string.h>
+#include "tmp.h"
 
-typedef int temp_file_handle;
-
-temp_file_handle write_temp_file(char* buffer, size_t length) {
+temp_file_handle write_temp_file(const char* buffer, size_t length) {
     /* Filename and the file itself creation. Sequence XXXXXX
        will be substitude with symbols, which will make
        name of temp file unique. */
@@ -50,16 +47,4 @@ char* read_temp_file (temp_file_handle temp_file, size_t* length) {
     /* Closing temp file, which will lead to destroying the file. */
     close(fd);
     return buffer;
-}
-
-int main(int argc, char* argv[]) {
-
-    if (argc < 2) {
-        fprintf(stderr, "You need to provide data to write to temp file.\n");
-        exit(1);
-    }
-
-    char* buffer = argv[1];
-
-    write_temp_file(buffer, strlen(buffer));
 }
