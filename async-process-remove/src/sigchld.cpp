@@ -2,7 +2,7 @@
 * File Name: sigchld.cpp
 * Purpose:
 * Creation Date: 06-06-2020
-* Last Modified: Sat 06 Jun 2020 06:43:04 PM MSK
+* Last Modified: Sat 06 Jun 2020 10:55:31 PM MSK
 * Created by: dima
 -----------------------------------------------------------------------------*/
 #include <stdio.h>
@@ -40,7 +40,7 @@ int main() {
             fprintf(stderr, "The child process exited abnormally.\n");
         }
     } else {
-        exit(1);
+        exit(2);
     }
 
     return 0;
