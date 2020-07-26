@@ -2,11 +2,12 @@
 * File Name: snake.cpp
 * Purpose:
 * Creation Date: 01-03-2020
-* Last Modified: Sat 21 Mar 2020 02:08:57 PM MSK
+* Last Modified: Sun 26 Jul 2020 07:28:21 PM MSK
 * Created by: dima
 -----------------------------------------------------------------------------*/
 
 #include <cstddef>
+#include <ncurses.h>
 #include "snake.h"
 
 SnakeNode::SnakeNode(int y, int x, int dir) {
@@ -122,4 +123,35 @@ bool Snake::is_one_of_the_nodes(int y, int x) {
     }
 
     return is_detected;
+}
+
+bool Snake::is_opposite_direction(int direction) {
+    bool is_opposite = false;
+
+    switch (direction) {
+        case KEY_UP:
+            if (head->direction == DOWN) {
+                is_opposite = true;
+            }
+            break;
+        case KEY_DOWN:
+            if (head->direction == UP) {
+                is_opposite = true;
+            }
+            break;
+        case KEY_LEFT:
+            if (head->direction == RIGHT) {
+                is_opposite = true;
+            }
+            break;
+        case KEY_RIGHT:
+            if (head->direction == LEFT) {
+                is_opposite = true;
+            }
+            break;
+        default:
+            break;
+    }
+
+    return is_opposite;
 }

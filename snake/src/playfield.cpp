@@ -2,7 +2,7 @@
 * File Name: playfield.cpp
 * Purpose:
 * Creation Date: 01-03-2020
-* Last Modified: Sun 22 Mar 2020 01:49:11 AM MSK
+* Last Modified: Sun 26 Jul 2020 07:27:21 PM MSK
 * Created by: dima
 -----------------------------------------------------------------------------*/
 
@@ -76,21 +76,23 @@ void Playfield::direct_snake(int direction) {
         direction == KEY_LEFT ||
         direction == KEY_RIGHT) {
 
-        switch (direction) {
-            case KEY_UP:
-                snake->head->direction = UP;
-                break;
-            case KEY_DOWN:
-                snake->head->direction = DOWN;
-                break;
-            case KEY_LEFT:
-                snake->head->direction = LEFT;
-                break;
-            case KEY_RIGHT:
-                snake->head->direction = RIGHT;
-                break;
-            default:
-                break;
+        if (!snake->is_opposite_direction(direction)) {
+            switch (direction) {
+                case KEY_UP:
+                    snake->head->direction = UP;
+                    break;
+                case KEY_DOWN:
+                    snake->head->direction = DOWN;
+                    break;
+                case KEY_LEFT:
+                    snake->head->direction = LEFT;
+                    break;
+                case KEY_RIGHT:
+                    snake->head->direction = RIGHT;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

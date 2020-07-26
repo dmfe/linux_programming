@@ -2,7 +2,7 @@
 * File Name: snake.h
 * Purpose:
 * Creation Date: 01-03-2020
-* Last Modified: Sat 21 Mar 2020 02:10:08 PM MSK
+* Last Modified: Sun 26 Jul 2020 07:18:33 PM MSK
 * Created by: dima
 -----------------------------------------------------------------------------*/
 
@@ -34,6 +34,7 @@ class Snake {
         void eat();
         bool detect_collision();
         bool is_one_of_the_nodes(int y, int x);
+        bool is_opposite_direction(int direction);
 
     private:
         int size;
