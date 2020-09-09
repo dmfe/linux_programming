@@ -1,0 +1,113 @@
+There are two executable files formats - COFF and ELF
+1. COFF - Common Object File Format.
+2. ELF - Executable and Linking Format.
+
+Processes Structure:
+Both types has 3 basic segments:
+* Code segment (text)
+* Data segment (data)
+* Stack segment (stack)
+
+Size of data and stack segments can be changed.
+Data segment include initialized and non initialize data. Not inittialized data knonw as BSS.
+
+                                        Virtual process memory
+
+             COFF                                                                 ELF
+   +---------------------+                                             +---------------------+
+   |                     |                                             |                     |
+   |   Shared Libraries  |                                             |   Dynamic Segments  |
+   |                     |                                             |                     |
+   +---------------------+                                             +---------------------+
+   |    Shared memory    |                                             |         Heap        |
+   +---------------------+                                             |          /\         |
+   |        Stack        |                                             |          ||         |
+   +---------------------+                                             +---------------------+
+   |          ||         |                                             |                     |
+   |          \/         |                                             |         Data        |
+   |         Heap        |                                             |                     |
+   |          /\         |                                             +---------------------+
+   |          ||         |                                             |                     |
+   +---------------------+                                             |         Code        |
+   |                     |                                             |                     |
+   |         Data        |                                             +---------------------+
+   |                     |                                             |        Stack        |
+   +---------------------+                                             +---------------------+
+   |                     |                                             |          ||         |
+   |         Code        |                                             |          \/         |
+   |                     |                                             |                     |
+   +---------------------+                                             +---------------------+
+
+ELF has several types of files:
+
+1. Relocatable file. Stores instructions and data, which can be linked with another object files.
+   As a result of such linking can be the executable file or shared object file.
+
+2. Shared object file. Contains instructions and data, but can be used in two ways. Option one -
+   it can be linked with other relocatable objects and shared object files. As a result of this
+   the will be new object file. Option two - During some other programm starting, the OS will
+   dynamically links it with corresponding executable file of the programm. As a result program
+   executable image will be created (Last case - we are talking about shared libraries).
+
+3. Executable file. Stores full description, which allows the OS to create process image. Stores
+   instructions and data, description of necessary shared objects, and also symbolic and debug
+   information.
+                        Structure of ELF executable file
+                                                         +----------------------------------+
+                                                        /|  e_ident[]=0x7f,'E','L','F',...  |
+                                                       / |  e_type=ET_EXEC                  |
+                                                      /  |  e_machine=EM_SPARC              |
+                                                     /   |  e_version=EV_CURREN             |
+                                                    /    |  e_entry ------------------------|--+
+      +--------------------------------------------/-----|--e_phoff                         |  |
++-----|-------------------------------------------/------|--e_shoff                         |  |
+|     |                                          /       |  e_ehsize                        |  |
+|     |                                         /        |  e_phentsize                     |  |
+|     |                                        /         |  e_phnum                         |  |
+|     |                                       /          |  e_shentsize                     |  |
+|     |     +--------------------------------+           |  e_shnum                         |  |
+|     |     |              Header            |           |  e_shstrndx                      |  |
+|     +---->+--------------------------------+-----------+----------------------------------+  |
+|        +--|------- Segment_1 header        |                                                 |
+|     +--|--|------- Segment_2 header        |                                                 |
+|     |  |  |               ...              |                                                 |
+|  +--|--|--|------- Segment_n header        |                                                 |
+|  |  |  +->+--------------------------------+                                                 |
+|  |  |     |           Segment_1            |                                                 |
+|  |  +---->+--------------------------------+                                                 |
+|  |        |           Segment_2            |<------------------------------------------------+
+|  |        +--------------------------------+
+|  |        |              ...               |
+|  +------->+--------------------------------+
+|           |           Segment_n            |
++---------->+--------------------------------+
+            |      Sections Headers Table    |
+            +--------------------------------+
+
+e_ident[]   Array of bytes, each determines some common characteristic of the file: File Format(ELF),
+            version number, system architecture(32, 64 bits) etc.
+
+e_type      Type of the file. ELF supports several file types.
+
+e_machine   Architecture of the hardware platform, for which this file was created.
+
+e_version   ELF format version number. Usually EV_CURRENC is used, which means latest version.
+
+e_entry     Virtual address, to which execution flow will be forwarded after program load (entry point).
+
+e_phoff     Offset from begginning of the file, where headers table is located.
+
+e_shoff     Where Section Headeres table is located.
+
+e_ehsize    Size of the header.
+
+e_phentsize Size of each header of the programm.
+
+e_phnum     Number of programm headers.
+
+e_shentsize Size of each section header.
+
+e_shnum     Number of section headers.
+
+e_shstrndx  Where the segment, which contains table of strings.
+
